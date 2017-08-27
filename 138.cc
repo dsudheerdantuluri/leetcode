@@ -11,7 +11,7 @@ struct RandomListNode {
 
 class Solution {
 public:
-    RandomListNode *copyRandomList(RandomListNode *head) 
+    RandomListNode *copyRandomListUsingMemory(RandomListNode *head) 
 		{
 			if (head == nullptr) return head;
 
@@ -36,10 +36,73 @@ public:
 
 			return mapper[head]; 
     }
+
+    RandomListNode *copyRandomListWithOutUsingMemory(RandomListNode *head) 
+		{
+			if (head == nullptr) return head;
+
+			RandomListNode *p_node1 = head;
+
+			RandomListNode *p_node2 = nullptr;
+
+			RandomListNode *head_clone = nullptr;
+
+			while (p_node1 != nullptr) {
+
+				p_node2 = new RandomListNode(p_node1->label);
+
+				if (!head_clone) head_clone = p_node2;
+
+				p_node2->next = p_node1->random;
+
+				p_node1->random = p_node2;
+
+				p_node1 = p_node1->next;
+		
+			}
+
+			p_node1 = head;
+
+			p_node2 = head_clone;
+
+		  while ( p_node1 != nullptr ) {
+
+				RandomListNode *temp = p_node2->next;
+
+				p_node2->random = p_node2->next ? p_node2->next->random : nullptr;
+
+				p_node1 = p_node1->next;
+
+				p_node2 = p_node1 ? p_node1->random : nullptr;
+
+			}
+
+			p_node1 = head;
+
+			p_node2 = head_clone;
+
+		  while ( p_node1 != nullptr ) {
+
+				p_node1->random = p_node2->next;
+
+				p_node2->next = p_node1->next ? p_node1->next->random : nullptr;
+
+				p_node1 = p_node1->next;
+
+				p_node2 = p_node2->next;       
+
+			}
+
+			return head_clone;
+		}
+
+		RandomListNode *copyRandomList(RandomListNode *head)
+		{
+			copyRandomListWithOutUsingMemory(head);
+		} 
 };
 
 int main()
 {
-
 	return 0;
 }
