@@ -49,6 +49,28 @@ public:
       return p_node->word;  
     }
     
+    bool searchSR(string word) {
+			return searchSR(mp_root, word, 0);
+		}
+
+    bool searchSR(TrieNode *mp_root, string &word, int index) {
+			if (!mp_root) return false;
+			if (index == word.length()) return true;
+			char c = word[index];
+			if ( c != '.' ) {
+				auto it = mp_root->hash.find(c);
+				if ( it == mp_root->hash.end() ) return false;
+				else return searchSR(it->second, word, index+1);
+			} else {
+				bool ret = false;
+				for ( const auto &entry : mp_root->hash ) {
+					char c = entry.first;
+					ret = ret || searchSR(entry.second, word, index+1);
+				}
+				return ret;
+			}
+		}
+
     /** Returns if there is any word in the trie that starts with the given prefix. */
     bool startsWith(string prefix) {
 			TrieNode *p_node = mp_root;
@@ -71,6 +93,26 @@ public:
  * bool param_2 = obj.search(word);
  * bool param_3 = obj.startsWith(prefix);
  */
+
+class WordDictionary {
+		Trie t;
+public:
+    /** Initialize your data structure here. */
+    WordDictionary() {
+        
+    }
+    
+    /** Adds a word into the data structure. */
+    void addWord(string word) {
+    	t.insert(word);  
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    bool search(string word) {
+			return t.searchSR(word);	
+    }
+};
+
 
 int main()
 {
